@@ -1,0 +1,25 @@
+a)El programa pide al usuario que introduzca un archivo o directorio a fin de mostrar la
+   información correspondiente de este.
+
+b)El método getFileName de Path obtiene el nombre String del archivo o directorio sin
+  información sobre la ubicación.
+
+c)El método static isDirectory de Files recibe un objeto Path y devuelve un boolean que indica
+  si ese objeto Path representa un directorio en el disco.
+
+d)El método isAbsolute de Path devuelve un boolean que indica si ese objeto Path
+  representa una ruta absoluta a un archivo o directorio.
+
+e)El método static getLastModifiedTime de Files recibe un objeto Path y devuelve un objeto
+  FileTime que indica cuándo fue la última vez que se modificó el archivo. El programa
+  imprime en pantalla la representación String predeterminada de FileTime.
+
+f)El método static size de Files recibe un objeto Path y devuelve un long que representa el
+  número de bytes en el archivo o directorio. Para los directorios, el valor devuelto es
+  específico de la plataforma.
+
+g)El método toAbsolutePath de Path convierte el objeto Path con el que se invoca en una
+  ruta absoluta.
+
+h)El método newDirectoryStream de Files obtiene un objeto DirectoryStream<Path> que
+  contiene objetos Path para el contenido del directorio.
