@@ -1,63 +1,73 @@
 package Actividad05;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Scanner;
 
 public class Agenda {
     ArrayPersona lista;
-    FileInputStream agendaFile;
-    final int longLinea = 32;
+    Scanner agendaFile;
+    final int longLinea = 32; // No se utiliza realmente, lo puedes eliminar si no es necesario
 
     public Agenda() {
-        lista = cargaContactor();
-    }
-    public void bucle() {
-        String nombre;
-        System.out.println("Introduzca un nombre o <Enter>: ");
+        String fileName = "E:\\Lp3\\Git\\Sesion07\\Actividad05\\agenda.txt"; // Corrige la ruta del archivo
+        File file = new File(fileName);
         try {
-            while (!"".equals(nombre = leeEntrada(System.in))) {
+            agendaFile = new Scanner(file); // Inicializa el Scanner correctamente
+            lista = cargaContacto();        // Carga los contactos al iniciar la agenda
+        } catch (FileNotFoundException e) {
+            System.out.println("Archivo no encontrado: " + e.getMessage());
+        }
+    }
+
+    public void bucle() {
+        Scanner sc = new Scanner(System.in);
+        String nombre;
+        System.out.println("Introduzca un nombre o <Enter> para salir: ");
+        try {
+            while (!"".equals(nombre = sc.nextLine())) {
                 lista.printArray(nombre);
-                System.out.println("Introduzca un nombre o <Enter>1: ");
+                System.out.println("Introduzca un nombre o <Enter> para salir: ");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    private String leeEntrada(InputStream in) throws IOException {
-        byte chars[] = new byte[longLinea];
-        int contador = 0;
-        while (contador < longLinea && (chars[contador++] =(byte) in.read()) != '\n')
-            if (chars[contador-1] == -1)
-                return null;
-        return (new String(chars, 0, contador-1));
+
+    private String leeEntrada(Scanner entrada) {
+        if (entrada.hasNextLine()) {
+            return entrada.nextLine();
+        } else {
+            return null;  // Retorna null si no hay más líneas
+        }
     }
-    private Persona cargaAgenda() throws IOException {
+
+    private Persona cargaAgenda() {
         String nombre = leeEntrada(agendaFile);
-        if (nombre == null)
+        if (nombre == null) {
             return null;
+        }
         String telefono = leeEntrada(agendaFile);
         String direccion = leeEntrada(agendaFile);
-        return new Persona(nombre, telefono, direccion);
+        return new Persona(nombre, telefono, direccion); // Crea un nuevo objeto Persona
     }
-    private ArrayPersona cargaContactor() {
+
+    private ArrayPersona cargaContacto() {
         ArrayPersona directorio = new ArrayPersona();
         Persona nuevaPersona;
         try {
-            agendaFile = new FileInputStream("\\Actividad05\\agenta,txt");
-            while(true) {
-                nuevaPersona = cargaAgenda();
-                if (nuevaPersona == null)
-                    return (directorio);
+            while ((nuevaPersona = cargaAgenda()) != null) { // Mientras haya contactos por leer
                 directorio.addArrat(nuevaPersona);
             }
-        }catch(FileNotFoundException e) {
-            System.out.println(e.getMessage());
-        }catch (Exception e){
-            System.out.println("Error en la carga de contactos");
-            System.exit(1);
+        } catch (Exception e) {
+            System.out.println("Error en la carga de contactos: " + e.getMessage());
         }
-        return (directorio);
+        return directorio; // Retorna el directorio completo de contactos
+    }
+
+    public void mostraragenda() {
+        lista.imprimirArray(); // Método para imprimir todos los contactos cargados
     }
 }
+
+

@@ -2,7 +2,7 @@ package Actividad05;
 
 import java.io.Serializable;
 
-public class Persona implements Serializable {
+public class Persona {
     private String nombre;
     private String telefono;
     private String direccion;

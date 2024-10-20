@@ -14,7 +14,6 @@ public class DemoJFileChooser extends JFrame {
         this.areaSalida = new JTextArea();
         add(new JScrollPane(areaSalida));
         analizarRuta();
-
     }
     public void analizarRuta() throws IOException {
         // crea un objeto Path con la ruta al archivo o directorio sleccionado por el usuario
