@@ -33,4 +33,7 @@ public class Empleado {
                 "\n   Nombre: "+ this.nombre+
                 "\n   Sueldo: "+ this.sueldo;
     }
+    public String guardaDatos() {
+        return (this.numero + " " + this.nombre + " " + this.sueldo);
+    }
 }

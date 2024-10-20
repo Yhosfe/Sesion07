@@ -22,11 +22,15 @@ public class EmpleadosVista {
         System.out.print("Lista de empleados: \n");
         for(Empleado emp: empleados){
             System.out.println(emp);
+            System.out.println();
         }
     }
     public String ingresarDato(String dato){
         System.out.printf("Ingrese %s", dato);
         return teclado.nextLine();
+    }
+    public void imprimirEmpleado(Empleado emp){
+        System.out.println(emp);
     }
 
 }

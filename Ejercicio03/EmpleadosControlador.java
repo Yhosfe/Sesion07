@@ -1,14 +1,18 @@
 package Ejercicio03;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class EmpleadosControlador {
     private EmpleadosModelo modelo;
     private EmpleadosVista vista;
     private File file;
+    private String ruta;
     public EmpleadosControlador() {
-        vista = new EmpleadosVista();
-        modelo = new EmpleadosModelo();
+        this.vista = new EmpleadosVista();
+        this.modelo = new EmpleadosModelo();
+        this.ruta = "Ejercicio03\\empleados.txt"; //Dirección absoluta del archivo
+        this.file = new File(this.ruta);
         cargarArchivoEmpleadosModelo();
 
     }
@@ -16,27 +20,34 @@ public class EmpleadosControlador {
     public void iniciar() {
         String op;
         do {
-            op = vista.ingresarDato("Ingrese opcion");
+            vista.menu();
+            op = vista.ingresarDato("Ingrese una opcion: ");
             switch (op) {
                 case "1":
                     listarEmpleados();
                     break;
                 case "2":
                     agregarNuevoEmpleado();
+                    guardarEmpleados();
+                    break;
                 case "3":
+                    buscarEmpleadoControl();;
+                    break;
                 case "4":
+                    eliminarEmpleado();
+                    guardarEmpleados();
+                    break;
                 case "5":
+                    vista.mensaje("Saliendo de Empleados APP...");
+                    guardarEmpleados();
+                    break;
                 default:
                     vista.mensaje("Opción no válida");
             }
-        } while (op !="5");
+        } while (!op.equals("5"));
     }
     // Lectura de Empleados de un archivo
     private void cargarArchivoEmpleadosModelo() {
-        String ruta = "Ejercicio03\\empleados.txt"; //Dirección absoluta del archivo
-        vista.mensaje("Cargando empleados desde:" + ruta);
-        File file = new File(ruta);
-
         // Se lanza una excepción si ocurre un error de lectura
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String linea;
@@ -63,17 +74,68 @@ public class EmpleadosControlador {
     private void listarEmpleados() {
         vista.mostrarListaEmpleados(modelo.getEmpleados());
     }
-    //
+    // Permite agregar un numero Empleado
     private void agregarNuevoEmpleado() {
         try  {
             vista.mensaje("Datos de nuevo Empleado");
-            int num = Integer.parseInt(vista.ingresarDato("Ingrese numero: "));
-            String name = vista.ingresarDato("Ingrese nombre: ");
-            double salario = Double.parseDouble(vista.ingresarDato("Ingrese salario: "));
-            modelo.agregarEmpleado(new Empleado(num, name, salario));
-
+            int num = Integer.parseInt(vista.ingresarDato("numero: "));
+            // Si no existe el empleado procedera a ingresar los datos restantes
+            if (modelo.buscarEmpleado(num) == null) {
+                String name = vista.ingresarDato("nombre: ");
+                double salario = Double.parseDouble(vista.ingresarDato("salario: "));
+                modelo.agregarEmpleado(new Empleado(num, name, salario));
+                vista.mensaje("Empleado agregado");
+            } else {
+                vista.mensaje("El empleado: "+ num +" ya existe.");
+            }
+        // Captura Errores de casting
         } catch (NumberFormatException e) {
             vista.mensaje("Error: " + e.getMessage());
         }
     }
+    // Buscar empleado según el numero
+    public void buscarEmpleadoControl(){
+        try {
+            vista.mensaje("Busquede de Empleado");
+            int num = Integer.parseInt(vista.ingresarDato("numero: "));
+            Empleado empleadoB = modelo.buscarEmpleado(num);
+            if (empleadoB == null) {
+                vista.mensaje("El empleado no existe");
+            } else {
+                vista.imprimirEmpleado(empleadoB);
+            }
+        } catch (NumberFormatException e) {
+            vista.mensaje("Error: " + e.getMessage());
+        }
+    }
+    public void eliminarEmpleado(){
+        try {
+            vista.mensaje("Eliminando Empleado");
+            int num = Integer.parseInt(vista.ingresarDato("numero: "));
+            Empleado empleadoE = modelo.buscarEmpleado(num);
+            if (empleadoE == null) {
+                vista.mensaje("El empleado no existe");
+            } else {
+                modelo.eliminarEmpleado(empleadoE);
+                vista.mensaje("Empleado eliminado");
+            }
+        } catch (NumberFormatException e) {
+            vista.mensaje("Error: " + e.getMessage());
+        }
+    }
+    public void guardarEmpleados() {
+        ArrayList<Empleado> empleados = modelo.getEmpleados();
+        if (empleados.size() == 0) {
+            vista.mensaje("Lista de empleados vacia");
+        } else {
+            try (PrintWriter pw = new PrintWriter(file)){
+                for (Empleado empleado : empleados){
+                    pw.println(empleado.guardaDatos());
+                }
+            } catch (FileNotFoundException e){
+                vista.mensaje("Error: " + e.getMessage());
+            }
+        }
+    }
+
 }
