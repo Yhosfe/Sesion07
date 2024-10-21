@@ -10,7 +10,7 @@ public class TestFilePrueba {
         FileInputStream file;
         byte b[] = new byte[1024];
         try {
-            file = new FileInputStream("Ejercicio01\\personajes.txt");
+            file = new FileInputStream("agenda");
             file.read(b);
             String s = new String(b);
             ViewFile view = new ViewFile(s);
@@ -24,3 +24,4 @@ public class TestFilePrueba {
         }
     }
 }
+

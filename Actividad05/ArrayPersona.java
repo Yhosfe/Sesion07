@@ -25,6 +25,4 @@ public class ArrayPersona {
             System.out.println(this.arreglo[i]);
         }
     }
-
-
 }
